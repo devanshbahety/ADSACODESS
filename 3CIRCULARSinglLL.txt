@@ -1,0 +1,195 @@
+
+//CIRCULAR LL SINGLY
+
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+class CircularSinglyLinkedList {
+private:
+    Node* head;
+
+public:
+    CircularSinglyLinkedList() : head(nullptr) {}
+
+    // 1. CLL Search an element in the list
+    bool search(int value) {
+        if (!head) {
+             cout << "List is Empty" <<  endl;
+            return false;
+        }
+
+        Node* temp = head;
+        do {
+            if (temp->data == value) {
+                 cout << "Element found" <<  endl;
+                return true;
+            }
+            temp = temp->next;
+        } while (temp != head);
+
+         cout << "Element not found" <<  endl;
+        return false;
+    }
+
+    // 2. CLL Display elements in the list
+    void display() {
+        if (!head) {
+             cout << "List is Empty" <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        do {
+             cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != head);
+
+         cout <<  endl;
+    }
+
+    // 3. CLL SINGLY Insertion at the beginning of the list
+    void insertAtBegin(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+            head->next = head;
+        } else {
+            Node* current = head;
+            while (current->next != head) {
+                current = current->next;
+            }
+            current->next = newNode;
+            newNode->next = head;
+            head = newNode;
+        }
+    }
+
+    // 4. CLL SINGLY Insertion at the end of the list
+    void insertAtEnd(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+            newNode->next = head;
+        } else {
+            Node* current = head;
+            while (current->next != head) {
+                current = current->next;
+            }
+            current->next = newNode;
+            newNode->next = head;
+        }
+    }
+
+    // 5. CLL SINGLY Delete from the beginning of the list
+    void deleteAtBegin() {
+        if (!head) {
+             cout << "List is Empty. Nothing to delete." <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        if (head->next == head) {
+            head = nullptr;
+        } else {
+            Node* current = head;
+            while (current->next != head) {
+                current = current->next;
+            }
+            head = head->next;
+            current->next = head;
+        }
+
+        delete temp;
+    }
+
+    // 6. CLL SINGLY Delete from the end of the list
+    void deleteAtEnd() {
+        if (!head) {
+             cout << "List is Empty. Nothing to delete." <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        if (head->next == head) {
+            head = nullptr;
+        } else {
+            Node* current = head;
+            Node* prev = nullptr;
+            while (current->next != head) {
+                prev = current;
+                current = current->next;
+            }
+            prev->next = head;
+        }
+
+        delete temp;
+    }
+
+    // 7. CLL SINGLY Delete Specific Node
+    void deleteSpecific(int value) {
+        if (!head) {
+             cout << "List is Empty." <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        Node* pre = nullptr;
+
+        do {
+            if (temp->data == value) {
+                if (!pre) {
+                    // Deleting the first node
+                    deleteAtBegin();
+                } else if (temp->next == head) {
+                    // Deleting the last node
+                    deleteAtEnd();
+                } else {
+                    // Deleting a node in between
+                    pre->next = temp->next;
+                    delete temp;
+                }
+
+                return;
+            }
+
+            pre = temp;
+            temp = temp->next;
+        } while (temp != head);
+
+         cout << "Element not found." <<  endl;
+    }
+};
+
+int main() {
+    // Example usage of Circular Singly Linked List
+    CircularSinglyLinkedList cll;
+
+    cll.insertAtBegin(3);
+    cll.insertAtBegin(2);
+    cll.insertAtBegin(1);
+
+    cll.display();
+
+    cll.insertAtEnd(4);
+    cll.insertAtEnd(5);
+
+    cll.display();
+
+    cll.deleteAtBegin();
+    cll.deleteAtEnd();
+
+    cll.display();
+
+    cll.deleteSpecific(2);
+
+    cll.display();
+
+    return 0;
+}

@@ -1,0 +1,131 @@
+Doubly LL
+
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int num) : data(num), next(nullptr), prev(nullptr) {}
+};
+
+class DoublyLinkedList {
+public:
+    Node* head;
+
+    DoublyLinkedList() : head(nullptr) {}
+
+    // 1. DLL Search an element in the list
+    bool search(int value) {
+        Node* current = head;
+        while (current) {
+            if (current->data == value) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    // 2. DLL Insert at the beginning
+    void insertAtBegin(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // 3. DLL Insert at the end
+    void insertAtEnd(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+        } else {
+            Node* current = head;
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = newNode;
+            newNode->prev = current;
+        }
+    }
+
+    // 4. DLL Insert after a specific value
+    void insertAfterValue(int value, int num) {
+        Node* newNode = new Node(num);
+        Node* current = head;
+        while (current) {
+            if (current->data == value) {
+                newNode->next = current->next;
+                newNode->prev = current;
+                if (current->next) {
+                    current->next->prev = newNode;
+                }
+                current->next = newNode;
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Value " << value << " not found in the list." << std::endl;
+    }
+
+    // 5. DLL Delete at the beginning
+    void deleteAtBegin() {
+        if (!head) {
+            std::cout << "List is Empty. Nothing to delete." << std::endl;
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        if (head) {
+            head->prev = nullptr;
+        }
+        delete temp;
+    }
+
+    // 6. DLL Delete at the end
+    void deleteAtEnd() {
+        if (!head) {
+            std::cout << "List is Empty. Nothing to delete." << std::endl;
+            return;
+        }
+        Node* current = head;
+        while (current->next) {
+            current = current->next;
+        }
+        if (current->prev) {
+            current->prev->next = nullptr;
+        } else {
+            head = nullptr;
+        }
+        delete current;
+    }
+
+    // 7. DLL Delete a specific node from the list
+    void deleteAfterValue(int value) {
+        Node* current = head;
+        while (current) {
+            if (current->data == value) {
+                Node* temp = current->next;
+                if (temp) {
+                    current->next = temp->next;
+                    if (temp->next) {
+                        temp->next->prev = current;
+                    }
+                    delete temp;
+                } else {
+                    std::cout << "No element to delete after " << value << "." << std::endl;
+                }
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Value " << value << " not found in the list." << std::endl;
+    }
+};

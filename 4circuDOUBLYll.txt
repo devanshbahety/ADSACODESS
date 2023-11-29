@@ -1,0 +1,187 @@
+
+Circular DOUBLY 
+
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int value) : data(value), next(nullptr), prev(nullptr) {}
+};
+
+class CircularDoublyLinkedList {
+private:
+    Node* head;
+
+public:
+    CircularDoublyLinkedList() : head(nullptr) {}
+
+    // CDLL Search an element in the list
+    bool search(int value) {
+        if (!head) {
+             cout << "List is Empty" <<  endl;
+            return false;
+        }
+
+        Node* temp = head;
+        do {
+            if (temp->data == value) {
+                 cout << "Element found" <<  endl;
+                return true;
+            }
+            temp = temp->next;
+        } while (temp != head);
+
+         cout << "Element not found" <<  endl;
+        return false;
+    }
+
+    // CDLL Display elements in the list
+    void display() {
+        if (!head) {
+             cout << "List is Empty" <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        do {
+             cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != head);
+
+         cout <<  endl;
+    }
+
+    // CDLL Insertion at the beginning of the list
+    void insertAtBegin(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+            head->next = head;
+            head->prev = head;
+        } else {
+            newNode->next = head;
+            newNode->prev = head->prev;
+            head->prev->next = newNode;
+            head->prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // CDLL Insertion at the end of the list
+    void insertAtEnd(int num) {
+        Node* newNode = new Node(num);
+        if (!head) {
+            head = newNode;
+            head->next = head;
+            head->prev = head;
+        } else {
+            newNode->next = head;
+            newNode->prev = head->prev;
+            head->prev->next = newNode;
+            head->prev = newNode;
+        }
+    }
+
+    // CDLL Delete from the beginning of the list
+    void deleteAtBegin() {
+        if (!head) {
+             cout << "List is Empty. Nothing to delete." <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        if (head->next == head) {
+            head = nullptr;
+        } else {
+            head->prev->next = head->next;
+            head->next->prev = head->prev;
+            head = head->next;
+        }
+
+        delete temp;
+    }
+
+    // CDLL Delete from the end of the list
+    void deleteAtEnd() {
+        if (!head) {
+             cout << "List is Empty. Nothing to delete." <<  endl;
+            return;
+        }
+
+        Node* temp = head->prev;
+        if (head->next == head) {
+            head = nullptr;
+        } else {
+            temp->prev->next = head;
+            head->prev = temp->prev;
+        }
+
+        delete temp;
+    }
+
+    // CDLL Delete Specific Node
+    void deleteSpecific(int value) {
+        if (!head) {
+             cout << "List is Empty." <<  endl;
+            return;
+        }
+
+        Node* temp = head;
+        Node* pre = nullptr;
+
+        do {
+            if (temp->data == value) {
+                if (!pre) {
+                    // Deleting the first node
+                    deleteAtBegin();
+                } else if (temp->next == head) {
+                    // Deleting the last node
+                    deleteAtEnd();
+                } else {
+                    // Deleting a node in between
+                    pre->next = temp->next;
+                    temp->next->prev = pre;
+                    delete temp;
+                }
+
+                return;
+            }
+
+            pre = temp;
+            temp = temp->next;
+        } while (temp != head);
+
+         cout << "Element not found." <<  endl;
+    }
+};
+
+int main() {
+    // Example usage of Circular Doubly Linked List
+    CircularDoublyLinkedList cdll;
+
+    cdll.insertAtBegin(3);
+    cdll.insertAtBegin(2);
+    cdll.insertAtBegin(1);
+
+    cdll.display();
+
+    cdll.insertAtEnd(4);
+    cdll.insertAtEnd(5);
+
+    cdll.display();
+
+    cdll.deleteAtBegin();
+    cdll.deleteAtEnd();
+
+    cdll.display();
+
+    cdll.deleteSpecific(2);
+
+    cdll.display();
+
+    return 0;
+}
